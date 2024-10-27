@@ -1,5 +1,5 @@
 <?php
-class Users {
+class User {
 
     public static function create($username, $email, $password) {
         $conn = new mysqli('localhost', 'root', '', 'codepro');
