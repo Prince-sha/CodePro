@@ -1,11 +1,12 @@
 <?php
-require_once 'Users.php';
+include 'User.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-
-    Users::create($username, $email, $password);
+    
+    User::create($username, $email, $password);
 }
 ?>
