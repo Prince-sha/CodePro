@@ -1,4 +1,5 @@
 <?php
+
 class Database {
 
     public static function getDB() {
@@ -12,3 +13,5 @@ class Database {
     }
 }
 ?>
+
+<!-- first letter of filename should be CAPITAL like Database.php, not database.php -->

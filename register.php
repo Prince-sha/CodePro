@@ -1,12 +1,18 @@
 <?php
-include 'User.php';
+include 'classes/Database.php';
+include 'classes/User.php';
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
 
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    
-    User::create($username, $email, $password);
+    // Database connection is established here
+    // Make sure to use chatgpt thoughfully.
+    $conn = Database::getDB();
+
+    User::create( $conn, $username, $email, $password);
 }
 ?>
