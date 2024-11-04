@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $announcementDate = $_POST['announcementDate'];
 
     $announcement = new Announcement($title, $description, $announcementDate);
-
   
     if (!empty($_FILES['image']['name'])) {
         $announcement->uploadImage($_FILES['images']);
@@ -17,11 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $announcement->uploadFile($_FILES['documents']);
     }
 
-
     $announcement->save();
 }
 ?>
-
 <!DOCTYPE html>
 <head>
     
