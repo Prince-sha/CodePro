@@ -1,5 +1,5 @@
 <?php
-require_once 'Announcement.php';
+require_once 'announcement.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
