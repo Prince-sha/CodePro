@@ -10,7 +10,7 @@ class Announcement
     private $file;
     private $db;
 
-    public function __construct($title, $description, $announcementDate, $image = 'dummy_image.jpg', $file = null)
+    public function __construct($title, $description, $announcementDate, $image = 'image1.jpg', $file = null)
     {
         $this->title = $title;
         $this->description = $description;
