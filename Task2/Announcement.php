@@ -11,6 +11,7 @@ class Announcement
     private $db;
 
     public function __construct($title, $description, $announcementDate, $image = 'image1.jpg', $file = null)
+    // Why is the image.jpg already in there!
     {
         $this->title = $title;
         $this->description = $description;
