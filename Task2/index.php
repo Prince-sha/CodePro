@@ -1,58 +1,146 @@
 <?php
-require_once 'announcement.php';
-// require_once '../classes/Database.php' // I was expecting this class here as well
-// We are trying to create one single app from all tasks that you will receive
-// let's try to keep consistence in the code. 
-// For now this is ok. But we will have one database for this entire app and 
-// we may have multiple tables in it. 
+require_once '../classes/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // I am unable to see here any connection to database being formed
-    // We never call database class into anyother class or make it extended if you have done so
-    // somewhere!!!
-
-    // $conn = Database::getDB() I was expecting this line here
+    $conn = Database::getDB();
 
     $title = $_POST['title'];
     $description = $_POST['description'];
     $announcementDate = $_POST['announcementDate'];
 
     $announcement = new Announcement($title, $description, $announcementDate);
-  
+
+    $response = ['success' => false, 'message' => '', 'data' => []];
+
+    
     if (!empty($_FILES['image']['name'])) {
-        $announcement->uploadImage($_FILES['images']);
+        $imageUploadStatus = $announcement->uploadImage($_FILES['image']);
+        if (!$imageUploadStatus) {
+            $response['message'] = "Error uploading image.";
+            echo json_encode($response);
+            exit;
+        }
     }
 
     if (!empty($_FILES['file']['name'])) {
-        $announcement->uploadFile($_FILES['documents']);
+        $fileUploadStatus = $announcement->uploadFile($_FILES['file']);
+        if (!$fileUploadStatus) {
+            $response['message'] = "Error uploading file.";
+            echo json_encode($response);
+            exit;
+        }
     }
 
-    $announcement->save();
+    if ($announcement->save($conn)) {
+        $response['success'] = true;
+        $response['message'] = "Announcement created successfully.";
+        $response['data'] = [
+            'title' => $title,
+            'description' => $description,
+            'announcementDate' => $announcementDate
+        ];
+    } else {
+        $response['message'] = "Error saving announcement.";
+    }
+
+    echo json_encode($response);
+    exit;
 }
 ?>
-
-<!-- When the annoncement is created where will be shown???? -->
- <!-- Make use of Ajax to show it here on the same page, you may consider it as you next task 3 -->
-
+ 
 <!DOCTYPE html>
+<html>
 <head>
-    
     <title>Create Announcement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        #announcements {
+            margin-top: 20px;
+        }
+        .announcement {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Create Announcement</h2>
-    <!-- This will be used for insering the data into database -->
-     <!-- This code does not make use of bootstrap or CSS which is why it looks so bad -->
-    <form action="index.php" method="post" enctype="multipart/form-data">
-        <input type="text" name="title" placeholder="Title" required><br><br>
-        <textarea name="description" placeholder="Description" required></textarea><br><br>
-        <input type="date" name="announcementDate" required><br><br>
+    <form id="announcementForm" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="description" placeholder="Description" required></textarea>
+        <input type="date" name="announcementDate" required>
+        
         <label for="image">Upload Image:</label>
-        <input type="file" name="image" accept="image/*"><br><br>
+        <input type="file" name="image" accept="image/*">
+        
         <label for="file">Upload Document:</label>
-        <input type="file" name="file" accept=".pdf,.doc,.docx,.txt"><br><br>
+        <input type="file" name="file" accept=".pdf,.doc,.docx,.txt">
+        
         <button type="submit">Submit Announcement</button>
     </form>
+
+    <div id="announcements">
+     
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('announcementForm');
+            const announcementsContainer = document.getElementById('announcements');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+            
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('index.php', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        const announcementHtml = `
+                            <div class="announcement">
+                                <h3>${result.data.title}</h3>
+                                <p>${result.data.description}</p>
+                                <small>${result.data.announcementDate}</small>
+                            </div>
+                        `;
+                        announcementsContainer.insertAdjacentHTML('afterbegin', announcementHtml);
+                        alert(result.message);
+                        form.reset(); 
+                    } else {
+                        alert(result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
+
