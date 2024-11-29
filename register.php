@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     // Database connection is established here
-    // Make sure to use chatgpt thoughfully.
+   
     $conn = Database::getDB();
 
     User::create( $conn, $username, $email, $password);
