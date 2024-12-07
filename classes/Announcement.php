@@ -11,7 +11,6 @@ class Announcement
     private $db;
 
     public function __construct($title, $description, $announcementDate, $image = '', $file = null)
-    // Why is the image.jpg already in there!
     // Removed image. I just wrote image1.jpg, but it doesn't physically exist in my folders.
     {
         $this->title = $title;
