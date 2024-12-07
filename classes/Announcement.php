@@ -1,5 +1,5 @@
 <?php
-require_once 'dbconfig.php';
+require_once 'Database.php';
 
 class Announcement
 {
