@@ -1,7 +1,7 @@
 <?php
 require_once 'Database.php'; 
 
-    // Create a new client
+
     public function create($id, $name, $email, $phone)
     {
         $stmt = $this->conn->prepare("INSERT INTO Users (id, name, email, phone) VALUES (?, ?, ?, ?)");
@@ -26,7 +26,6 @@ require_once 'Database.php';
         return $clients;
     }
 
-    // Update a client by ID
     public function update($id, $name, $email, $phone)
     {
         $stmt = $this->conn->prepare("UPDATE clients SET name = ?, email = ?, phone = ? WHERE id = ?");
