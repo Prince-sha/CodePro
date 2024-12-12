@@ -1,7 +1,7 @@
 <?php
 require 'Clients.php'; 
 require 'Database.php'; 
-require 'vendor/autoload.php'; 
+#require 'vendor/autoload.php'; 
 
 use Endroid\QrCode\Builder\Builder; 
 
