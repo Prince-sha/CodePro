@@ -1,9 +1,16 @@
 <?php
 require 'Clients.php'; 
-require 'Databse.php'; 
+require 'dbconfig.php'; 
 
-Clients::create($conn, 'Prince', 'princesh@gmail.com', '03422166654');
 
-echo "Client created successfully.";
+$conn = getDBConnection(); 
+
+
+$response = Clients::create($conn, 'Prince', 'princesh@gmail.com', '03422166654');
+
+if (strpos($response, 'Error') !== false) {
+    echo "Failed to create client: " . $response;
+} else {
+    echo "Client created successfully.";
+}
 ?>
-
